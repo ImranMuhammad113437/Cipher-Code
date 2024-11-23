@@ -346,13 +346,15 @@ class CipherInterface:
 
         # Check the value of the selected cipher and handle accordingly
         if selected_cipher == "Caesar Cipher":
-            self.keyword_entry.configure(state="disabled")
             self.key_entry.configure(state="normal")
+            self.keyword_entry.configure(state="disabled")
             self.generate_button.config(state="disable")
             self.reset_button.config(state="disable")
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
 
         elif selected_cipher == "Vigenère Cipher":
             self.keyword_entry.configure(state="normal")
@@ -362,6 +364,8 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
 
         elif selected_cipher == "One-Time Pad":
             self.keyword_entry.configure(state="normal")
@@ -371,6 +375,9 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
             
         elif selected_cipher == "Playfair Cipher":
             self.keyword_entry.configure(state="normal")
@@ -380,6 +387,9 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
             
         elif selected_cipher == "Monoalphabetic Cipher":
             self.generate_button.config(state="normal")
@@ -389,6 +399,9 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
 
         elif selected_cipher == "Brute Force":
             self.generate_button.config(state="disable")
@@ -398,6 +411,9 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
 
         elif selected_cipher == "Reil Fence Cipher":
             self.generate_button.config(state="disable")
@@ -407,6 +423,9 @@ class CipherInterface:
             self.railrows_entry.config(state="normal")
             self.colseq_entry.config(state="disable")
             self.transposition_combo.configure(state="disabled")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
         
         elif selected_cipher == "Transposition Cipher":
             self.generate_button.config(state="disable")
@@ -416,6 +435,20 @@ class CipherInterface:
             self.railrows_entry.config(state="disable")
             self.colseq_entry.config(state="normal")
             self.transposition_combo.configure(state="normal")
+            self.key_a_combobox.configure(state="disabled")
+            self.key_b_combobox.configure(state="disabled")
+
+
+        elif selected_cipher == "Affine Cipher":
+            self.generate_button.config(state="disable")
+            self.reset_button.config(state="disable")
+            self.keyword_entry.configure(state="disable")
+            self.key_entry.configure(state="disable")
+            self.railrows_entry.config(state="disable")
+            self.colseq_entry.config(state="disable")
+            self.transposition_combo.configure(state="disable")
+            self.key_a_combobox.configure(state="normal")
+            self.key_b_combobox.configure(state="normal")
 
 
         else:
