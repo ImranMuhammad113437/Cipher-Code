@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import *
 import tkinter.messagebox as messagebox
 import random
+from math import gcd
 
 class CipherInterface:
     def __init__(self, root):
@@ -86,9 +87,31 @@ class CipherInterface:
         self.transposition_combo.place(x=10, y=190,width=280)  # Position it below the "Column Sequence" entry
         self.transposition_combo.set("Select position for Transposition:")  # Default value
 
+        # Label and Entry for Key (a)
+        self.key_a_label = tk.Label(self.middle_frame, text="Key (a):")
+        self.key_a_label.place(x=10, y=220)  # Positioned below the transposition combo
+        # Assuming self.middle_frame is already defined in your code
+        self.key_a_combobox = ttk.Combobox(self.middle_frame, values=[1, 3, 5, 7, 11, 15, 17, 19, 21, 23, 25], width=9)
+        self.key_a_combobox.place(x=70, y=220)  # Aligned next to the label
+
+        # Optionally, you can set a default value if needed
+        self.key_a_combobox.set(1)  # Set default value to 1 (or any other value from the list)
+        
+        
+
+        # Label and Entry for Key (b)
+        self.key_b_label = tk.Label(self.middle_frame, text="Key (b):")
+        self.key_b_label.place(x=160, y=220)  # Positioned to the right of Key (a)
+        # Assuming self.middle_frame is already defined in your code
+        self.key_b_combobox = ttk.Combobox(self.middle_frame, values=list(range(26)), width=8)
+        self.key_b_combobox.place(x=220, y=220)  # Aligned next to the label
+
+        # Optionally, you can set a default value if needed
+        self.key_b_combobox.set(0)  # Set default value to 0 (or any other value from the list)
+       
         # Add a button below the "Key" label to reset the inputs
         self.reset_button = tk.Button(self.middle_frame, text="Reset", command=self.reset_inputs, width=20)
-        self.reset_button.place(x=10, y=220)  # Position the button below the "Keyword" entry
+        self.reset_button.place(x=10, y=250)  # Position the button below the "Keyword" entry
 
         # Bind the combobox to the function that adds the cipher to the listbox
         self.cipher_combobox.bind("<<ComboboxSelected>>", self.check_on_cipher)
@@ -193,6 +216,10 @@ class CipherInterface:
                 self.encryption_transposition()  # Call the encryption function
             else:
                 self.output_textbox.insert(1.0, "Error: Invalid input in numerical fields.")
+        
+        elif selected_cipher == "Affine Cipher":
+            self.output_textbox.delete(1.0, tk.END)
+            self.encryption_affine_cipher()
 
 
         else:
@@ -290,6 +317,10 @@ class CipherInterface:
                 self.decryption_transposition()  # Call the encryption function
             else:
                 self.output_textbox.insert(1.0, "Error: Invalid input in numerical fields.")
+            
+        elif selected_cipher == "Affine Cipher":
+            self.output_textbox.delete(1.0, tk.END)
+            self.decryption_affine_cipher()
 
         else:
             self.output_textbox.delete(1.0, tk.END)
@@ -417,6 +448,74 @@ class CipherInterface:
     #-----------------------------------------------------------------------------------------------------------------------
     #Cipher Function
     #-----------------------------------------------------------------------------------------------------------------------    
+    def decryption_affine_cipher(self):
+        ciphertext = self.input_textbox.get("1.0", "end-1c")
+        key_a = int(self.key_a_combobox.get())
+        key_b = int(self.key_b_combobox.get())
+        
+        # Ensure 'a' is coprime with 26 (for the cipher to work)
+        if gcd(key_a, 26) != 1:
+            self.output_textbox.delete("1.0", "end")
+            self.output_textbox.insert("1.0", "Invalid key 'a', must be coprime with 26")
+            return
+
+        # Find the modular inverse of 'a' modulo 26
+        a_inv = None
+        for i in range(26):
+            if (key_a * i) % 26 == 1:
+                a_inv = i
+                break
+        
+        if a_inv is None:
+            self.output_textbox.delete("1.0", "end")
+            self.output_textbox.insert("1.0", "No modular inverse for 'a'. Decryption impossible.")
+            return
+        
+        plaintext = ""
+        
+        for char in ciphertext:
+            if char.isalpha():  # Only process alphabetic characters
+                shift = ord(char.lower()) - ord('a')
+                decrypted_char = (a_inv * (shift - key_b)) % 26
+                decrypted_char = chr(decrypted_char + ord('a'))
+                if char.isupper():
+                    decrypted_char = decrypted_char.upper()
+                plaintext += decrypted_char
+            else:
+                plaintext += char  # Non-alphabetic characters are unchanged
+
+        self.output_textbox.delete("1.0", "end")
+        self.output_textbox.insert("1.0", plaintext)
+
+    
+    def encryption_affine_cipher(self):
+        plaintext = self.input_textbox.get("1.0", "end-1c")
+        key_a = int(self.key_a_combobox.get())
+        key_b = int(self.key_b_combobox.get())
+        
+        # Ensure 'a' is coprime with 26 (for the cipher to work)
+        if gcd(key_a, 26) != 1:
+            self.output_textbox.delete("1.0", "end")
+            self.output_textbox.insert("1.0", "Invalid key 'a', must be coprime with 26")
+            return
+        
+        ciphertext = ""
+        
+        for char in plaintext:
+            if char.isalpha():  # Only process alphabetic characters
+                shift = ord(char.lower()) - ord('a')
+                encrypted_char = (key_a * shift + key_b) % 26
+                encrypted_char = chr(encrypted_char + ord('a'))
+                if char.isupper():
+                    encrypted_char = encrypted_char.upper()
+                ciphertext += encrypted_char
+            else:
+                ciphertext += char  # Non-alphabetic characters are unchanged
+
+        self.output_textbox.delete("1.0", "end")
+        self.output_textbox.insert("1.0", ciphertext)
+
+    
     def decryption_transposition(self):
         ciphertext = self.input_textbox.get("1.0", "end").strip()  # Retrieve ciphertext
         num_columns = int(self.key_entry.get().strip())  # Number of columns
