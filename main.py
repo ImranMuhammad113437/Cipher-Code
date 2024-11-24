@@ -4,6 +4,7 @@ from tkinter import *
 import tkinter.messagebox as messagebox
 import random
 from math import gcd
+from PIL import Image, ImageTk
 
 class CipherInterface:
     def __init__(self, root):
@@ -11,19 +12,33 @@ class CipherInterface:
         self.root.geometry("1024x590+0+0")  # Fixed window size
         self.root.title("Cipher Interface")
         
-        # Title label, centered at the top
-        self.title_label = tk.Label(root, text="Welcome", font=("Arial", 24, "bold"))
-        self.title_label.place(relx=0.5, y=30, anchor="center")
+        
 
-        # Creating the top frame with x-margin and width set to 800
-        self.top_frame = tk.Frame(root, bg="lightblue", height=500, width=984)
-        self.top_frame.place(x=20, y=60)
+        # Load the background image
+        image_path = "wp2701680-electronic-wallpaper.png"
+        bg_image = Image.open(image_path)
+        bg_image = bg_image.resize((1024, 590), Image.Resampling.LANCZOS)  # Resize image to fit frame dimensions
+        self.bg_photo = ImageTk.PhotoImage(bg_image)  # Save to instance variable to avoid garbage collection
+
+        # Create the top frame
+        self.top_frame = Frame(root, height=590, width=1024)
+        self.top_frame.place(x=0, y=0)
+
+        # Add the image as the background
+        bg_label = Label(self.top_frame, image=self.bg_photo)
+        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        # Title label, centered at the top
+        self.title_label = tk.Label(self.top_frame, text="CipherVault", font=("Arial", 24, "bold"), bg="black", fg="white")
+        self.title_label.place(relx=0.5, y=20, anchor="center")  # Centered horizontally with relx=0.5
+
+
 
         #-----------------------------------------------------------------------------------------------------------------------
 
         # Creating three LabelFrames inside the top frame (Left: Input, Middle: Process, Right: Output)
         self.left_frame = tk.LabelFrame(self.top_frame, text="Input", width=300, height=230)
-        self.left_frame.place(x=10, y=10)
+        self.left_frame.place(x=10, y=60)
         
         # Add a Text widget inside the left_frame for input
         self.input_textbox = tk.Text(self.left_frame, width=30, height=10, font=("Arial", 12))  # Adjusted width to fit inside
@@ -32,7 +47,7 @@ class CipherInterface:
         #-----------------------------------------------------------------------------------------------------------------------
 
         self.middle_frame = tk.LabelFrame(self.top_frame, text="Process", width=300, height=300)
-        self.middle_frame.place(x=340, y=10)
+        self.middle_frame.place(x=340, y=60)
 
         self.cipher_type_label = tk.Label(self.middle_frame, text="Select Cipher Type")
         self.cipher_type_label.place(x=10, y=10)  # Position the "Select Cipher Type" label
@@ -119,7 +134,7 @@ class CipherInterface:
         #-----------------------------------------------------------------------------------------------------------------------
 
         self.right_frame = tk.LabelFrame(self.top_frame, text="Output", width=300, height=230)
-        self.right_frame.place(x=670, y=10)
+        self.right_frame.place(x=670, y=60)
 
         # Add a Text widget inside the right_frame for output
         self.output_textbox = tk.Text(self.right_frame, width=30, height=10, font=("Arial", 12))  # Set the state to DISABLED
@@ -129,7 +144,7 @@ class CipherInterface:
 
         # Creating the "Action" LabelFrame below the "left_frame" with the same width and height 50
         self.action_frame = tk.LabelFrame(self.top_frame, text="Action", width=300, height=60)
-        self.action_frame.place(x=10, y=250)  # Adjust the y-coordinate to place it below the left_frame
+        self.action_frame.place(x=10, y=300)  # Adjust the y-coordinate to place it below the left_frame
 
         self.encrypt_button = tk.Button(self.action_frame, text="Encrypt", command=self.encryption_action)
         self.encrypt_button.place(x=5, y=0, width=140, height=30)  # Place the Encrypt button
@@ -140,7 +155,7 @@ class CipherInterface:
         #-----------------------------------------------------------------------------------------------------------------------    
         # Creating the "Monoalphabetic Cipher" LabelFrame below the "Action" LabelFrame
         self.cipher_frame = tk.LabelFrame(self.top_frame, text="Monoalphabetic Cipher", width=300, height=180)
-        self.cipher_frame.place(x=10, y=320)  # Adjust the y-coordinate to place it below the action_frame
+        self.cipher_frame.place(x=10, y=370)  # Adjust the y-coordinate to place it below the action_frame
 
         # Adding the alphabet row (A-Z)
         for i, letter in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
