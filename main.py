@@ -10,9 +10,7 @@ class CipherInterface:
     def __init__(self, root):
         self.root = root
         self.root.geometry("1024x590+0+0")  # Fixed window size
-        self.root.title("Cipher Interface")
-        
-        
+        self.root.title("Cipher Vault")
 
         # Load the background image
         image_path = "wp2701680-electronic-wallpaper.png"
@@ -29,27 +27,57 @@ class CipherInterface:
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         # Title label, centered at the top
-        self.title_label = tk.Label(self.top_frame, text="CipherVault", font=("Arial", 24, "bold"), bg="black", fg="white")
+        self.title_label = tk.Label(self.top_frame, text="Cipher Vault", font=("Arial", 24, "bold"), bg="#111111", fg="#05cacf")
         self.title_label.place(relx=0.5, y=20, anchor="center")  # Centered horizontally with relx=0.5
 
 
 
         #-----------------------------------------------------------------------------------------------------------------------
 
-        # Creating three LabelFrames inside the top frame (Left: Input, Middle: Process, Right: Output)
-        self.left_frame = tk.LabelFrame(self.top_frame, text="Input", width=300, height=230)
-        self.left_frame.place(x=10, y=60)
+        # Creating the "Input" LabelFrame
+        self.left_frame = tk.LabelFrame(
+            self.top_frame, 
+            text="Input", 
+            width=300, 
+            height=230, 
+            bg="#111111", 
+            fg="#05cacf", 
+            font=("Comic Sans MS", 12), 
+            bd=0,
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness
+        )
+        self.left_frame.place(x=10, y=60)  # Adjust the x and y coordinates to place it correctly
+
         
         # Add a Text widget inside the left_frame for input
-        self.input_textbox = tk.Text(self.left_frame, width=30, height=10, font=("Arial", 12))  # Adjusted width to fit inside
+        self.input_textbox = tk.Text(self.left_frame, width=30, bg="#111111", height=10, font=("Arial", 12),fg="#05cacf")  # Adjusted width to fit inside
         self.input_textbox.place(x=10, y=10)  # Add padding around the textbox
         
         #-----------------------------------------------------------------------------------------------------------------------
 
-        self.middle_frame = tk.LabelFrame(self.top_frame, text="Process", width=300, height=300)
-        self.middle_frame.place(x=340, y=60)
+        # Creating the "Process" LabelFrame
+        self.middle_frame = tk.LabelFrame(
+            self.top_frame, 
+            text="Process", 
+            width=300, 
+            height=320, 
+            bg="#111111", 
+            fg="#05cacf", 
+            bd=0, 
+            font=("Comic Sans MS", 12),
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness
+        )
+        self.middle_frame.place(x=340, y=60)  # Adjust the x and y coordinates to place it correctly
 
-        self.cipher_type_label = tk.Label(self.middle_frame, text="Select Cipher Type")
+
+    
+
+
+        self.cipher_type_label = tk.Label(self.middle_frame, text="Select Cipher Type", bg="#111111",fg="#05cacf")
         self.cipher_type_label.place(x=10, y=10)  # Position the "Select Cipher Type" label
 
 
@@ -58,39 +86,44 @@ class CipherInterface:
         self.selected_cipher = tk.StringVar()
         self.selected_cipher.set(self.cipher_names[0])  # Set default to "Select Cipher"
 
-        # Create the combobox for cipher selection
-        self.cipher_combobox = ttk.Combobox(self.middle_frame, textvariable=self.selected_cipher, values=self.cipher_names, state="readonly")
+        # Create a style for the combobox to apply the background and foreground colors
+        style = ttk.Style()
+        style.configure("TCombobox", background="#111111", foreground="#05cacf")
+
+        # Create the combobox for cipher selection with applied colors
+        self.cipher_combobox = ttk.Combobox(self.middle_frame, textvariable=self.selected_cipher, values=self.cipher_names, state="readonly", style="TCombobox")
         self.cipher_combobox.place(x=10, y=40, width=280)  # Position the combobox below the checkboxes
 
         self.cipher_combobox.current(0)  # Set the combobox to show "Select Cipher"
 
 
+
         # Add an input field for "Key" below the listbox
-        self.key_label = tk.Label(self.middle_frame, text="Key (Numerical): ")
+        self.key_label = tk.Label(self.middle_frame, text="Key (Numerical): ", bg="#111111",fg="#05cacf")
         self.key_label.place(x=10, y=70)  # Position the label below the listbox
 
-        self.key_entry = tk.Entry(self.middle_frame, width=25)  # Entry widget for the key input
+        self.key_entry = tk.Entry(self.middle_frame, width=25, bg="#111111",fg="#05cacf")  # Entry widget for the key input
         self.key_entry.place(x=120, y=70)  # Position it below the label
 
         # Add an input field for "Keyword" below the "Key" entry
-        self.keyword_label = tk.Label(self.middle_frame, text="Keyword: ")
+        self.keyword_label = tk.Label(self.middle_frame, text="Keyword: ", bg="#111111",fg="#05cacf")
         self.keyword_label.place(x=10, y=100)  # Position the label below the "Key" entry
 
-        self.keyword_entry = tk.Entry(self.middle_frame, width=25)  # Entry widget for the keyword input
+        self.keyword_entry = tk.Entry(self.middle_frame, width=25, bg="#111111",fg="#05cacf")  # Entry widget for the keyword input
         self.keyword_entry.place(x=120, y=100)  # Position it below the label
 
         # Label and Entry for "Number of Rows (Rail Cipher)"
-        self.railrows_label = tk.Label(self.middle_frame, text="Number of Rows (Rail Cipher): ")
+        self.railrows_label = tk.Label(self.middle_frame, text="Number of Rows (Rail Cipher): ", bg="#111111",fg="#05cacf")
         self.railrows_label.place(x=10, y=130)  # Position the label below the "Keyword" entry
 
-        self.railrows_entry = tk.Entry(self.middle_frame, width=12)  # Entry widget for the number of rows input
+        self.railrows_entry = tk.Entry(self.middle_frame, width=12, bg="#111111",fg="#05cacf")  # Entry widget for the number of rows input
         self.railrows_entry.place(x=200, y=130)  # Position it below the label
 
         # Label and Entry for "Column Sequence"
-        self.colseq_label = tk.Label(self.middle_frame, text="Column Sequence: ")
+        self.colseq_label = tk.Label(self.middle_frame, text="Column Sequence: ", bg="#111111",fg="#05cacf")
         self.colseq_label.place(x=10, y=160)  # Position the label below the "Number of Rows (Rail Cipher)" entry
 
-        self.colseq_entry = tk.Entry(self.middle_frame, width=20)  # Entry widget for the column sequence input
+        self.colseq_entry = tk.Entry(self.middle_frame, width=20, bg="#111111",fg="#05cacf")  # Entry widget for the column sequence input
         self.colseq_entry.place(x=150, y=160)  # Position it below the label
 
         # Dropdown (ComboBox) for "Position for Transposition"
@@ -103,7 +136,7 @@ class CipherInterface:
         self.transposition_combo.set("Select position for Transposition:")  # Default value
 
         # Label and Entry for Key (a)
-        self.key_a_label = tk.Label(self.middle_frame, text="Key (a):")
+        self.key_a_label = tk.Label(self.middle_frame, text="Key (a):", bg="#111111",fg="#05cacf")
         self.key_a_label.place(x=10, y=220)  # Positioned below the transposition combo
         # Assuming self.middle_frame is already defined in your code
         self.key_a_combobox = ttk.Combobox(self.middle_frame, values=[1, 3, 5, 7, 11, 15, 17, 19, 21, 23, 25], width=9)
@@ -115,7 +148,7 @@ class CipherInterface:
         
 
         # Label and Entry for Key (b)
-        self.key_b_label = tk.Label(self.middle_frame, text="Key (b):")
+        self.key_b_label = tk.Label(self.middle_frame, text="Key (b):", bg="#111111",fg="#05cacf")
         self.key_b_label.place(x=160, y=220)  # Positioned to the right of Key (a)
         # Assuming self.middle_frame is already defined in your code
         self.key_b_combobox = ttk.Combobox(self.middle_frame, values=list(range(26)), width=8)
@@ -125,46 +158,84 @@ class CipherInterface:
         self.key_b_combobox.set(0)  # Set default value to 0 (or any other value from the list)
        
         # Add a button below the "Key" label to reset the inputs
-        self.reset_button = tk.Button(self.middle_frame, text="Reset", command=self.reset_inputs, width=20)
-        self.reset_button.place(x=10, y=250)  # Position the button below the "Keyword" entry
+        self.reset_button = tk.Button(self.middle_frame, text="Reset",bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12), command=self.reset_inputs, width=20)
+        self.reset_button.place(x=40, y=250)  # Position the button below the "Keyword" entry
 
         # Bind the combobox to the function that adds the cipher to the listbox
         self.cipher_combobox.bind("<<ComboboxSelected>>", self.check_on_cipher)
 
         #-----------------------------------------------------------------------------------------------------------------------
 
-        self.right_frame = tk.LabelFrame(self.top_frame, text="Output", width=300, height=230)
-        self.right_frame.place(x=670, y=60)
+        # Creating the "Output" LabelFrame
+        self.right_frame = tk.LabelFrame(
+            self.top_frame, 
+            text="Output", 
+            width=300, 
+            height=320, 
+            bg="#111111", 
+            fg="#05cacf", 
+            bd=0, 
+            font=("Comic Sans MS", 12),
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness
+        )
+        self.right_frame.place(x=670, y=60)  # Adjust the x and y coordinates to place it correctly
+
 
         # Add a Text widget inside the right_frame for output
-        self.output_textbox = tk.Text(self.right_frame, width=30, height=10, font=("Arial", 12))  # Set the state to DISABLED
+        self.output_textbox = tk.Text(self.right_frame, width=30, height=15, font=("Arial", 12), bg="#111111",fg="#05cacf")  # Set the state to DISABLED
         self.output_textbox.place(x=10, y=10)  # Add padding around the textbox
 
         #-----------------------------------------------------------------------------------------------------------------------
 
         # Creating the "Action" LabelFrame below the "left_frame" with the same width and height 50
-        self.action_frame = tk.LabelFrame(self.top_frame, text="Action", width=300, height=60)
-        self.action_frame.place(x=10, y=300)  # Adjust the y-coordinate to place it below the left_frame
+        self.action_frame = tk.LabelFrame(
+            self.top_frame, 
+            text="Action", 
+            width=300, 
+            height=60, 
+            bg="#111111", 
+            fg="#05cacf", 
+            bd=0, 
+            font=("Comic Sans MS", 12),
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness
+        )
+        self.action_frame.place(x=10, y=320)  # Adjust the y-coordinate to place it below the left_frame
 
-        self.encrypt_button = tk.Button(self.action_frame, text="Encrypt", command=self.encryption_action)
+        self.encrypt_button = tk.Button(self.action_frame, text="Encrypt" ,bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12),command=self.encryption_action)
         self.encrypt_button.place(x=5, y=0, width=140, height=30)  # Place the Encrypt button
 
-        self.decrypt_button = tk.Button(self.action_frame, text="Decrypt", command=self.decryption_action)
+        self.decrypt_button = tk.Button(self.action_frame, text="Decrypt",bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12), command=self.decryption_action)
         self.decrypt_button.place(x=155, y=0, width=140, height=30)  # Place the Decrypt button
 
         #-----------------------------------------------------------------------------------------------------------------------    
         # Creating the "Monoalphabetic Cipher" LabelFrame below the "Action" LabelFrame
-        self.cipher_frame = tk.LabelFrame(self.top_frame, text="Monoalphabetic Cipher", width=300, height=180)
-        self.cipher_frame.place(x=10, y=370)  # Adjust the y-coordinate to place it below the action_frame
+        self.cipher_frame = tk.LabelFrame(
+            self.top_frame, 
+            text="Monoalphabetic Cipher", 
+            width=300, 
+            height=180, 
+            bg="#111111", 
+            fg="#05cacf", 
+            bd=0, 
+            font=("Comic Sans MS", 12),
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness
+        )
+        self.cipher_frame.place(x=220, y=400)  # Adjust the y-coordinate to place it below the action_frame
 
         # Adding the alphabet row (A-Z)
         for i, letter in enumerate("ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
-            label = tk.Label(self.cipher_frame, text=letter, font=("Arial", 10))
+            label = tk.Label(self.cipher_frame, text=letter, font=("Arial", 10), bg="#111111", fg="#05cacf")
             label.grid(row=0, column=i, padx=2, pady=5)  # Placing letters in the first row
 
         # Adding the "=" signs below each letter
         for i in range(26):
-            equals_label = tk.Label(self.cipher_frame, text="=", font=("Arial", 10))
+            equals_label = tk.Label(self.cipher_frame, text="=", font=("Arial", 10), bg="#111111", fg="#05cacf")
             equals_label.grid(row=1, column=i, padx=2, pady=5)  # Placing "=" in the second row
 
         # Adding the read-only fields below each "=" sign
@@ -174,12 +245,13 @@ class CipherInterface:
             field.grid(row=2, column=i, padx=2, pady=5)  # Placing entry fields in the third row
             self.fields.append(field)  # Add the Entry widget to the list
 
+
         # Adding the "Generate" button in row 3 and disabling it initially
-        self.generate_button = tk.Button(self.cipher_frame, text="Generate Cipher", command=self.generate_random_cipher, state="disabled")
+        self.generate_button = tk.Button(self.cipher_frame, text="Generate Cipher",bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12), command=self.generate_random_cipher, state="disabled")
         self.generate_button.grid(row=3, column=0, columnspan=13, pady=10)  # Span the button across half of the columns
 
         # Adding the "Reset" button in row 3 and disabling it initially
-        self.reset_button = tk.Button(self.cipher_frame, text="Reset Cipher", command=self.reset_cipher, state="disabled")
+        self.reset_button = tk.Button(self.cipher_frame, text="Reset Cipher",bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12), command=self.reset_cipher, state="disabled")
         self.reset_button.grid(row=3, column=13, columnspan=13, pady=10)  # Span the button across the other half of the columns
 
 
@@ -468,7 +540,15 @@ class CipherInterface:
 
         else:
             self.output_textbox.insert(tk.END, " ")
-            self.keyword_entry.configure(state="normal")
+            self.generate_button.config(state="disable")
+            self.reset_button.config(state="disable")
+            self.keyword_entry.configure(state="disable")
+            self.key_entry.configure(state="disable")
+            self.railrows_entry.config(state="disable")
+            self.colseq_entry.config(state="disable")
+            self.transposition_combo.configure(state="disable")
+            self.key_a_combobox.configure(state="disable")
+            self.key_b_combobox.configure(state="disable")
     
     def reset_inputs(self):
         # Reset the combobox to the default value
