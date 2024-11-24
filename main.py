@@ -11,6 +11,7 @@ class CipherInterface:
         self.root = root
         self.root.geometry("1024x590+0+0")  # Fixed window size
         self.root.title("Cipher Vault")
+        self.root.resizable(False, False)
 
         # Load the background image
         image_path = "wp2701680-electronic-wallpaper.png"
