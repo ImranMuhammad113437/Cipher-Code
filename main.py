@@ -26,9 +26,20 @@ class CipherInterface:
         bg_label = Label(self.top_frame, image=self.bg_photo)
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
-        # Title label, centered at the top
-        self.title_label = tk.Label(self.top_frame, text="Cipher Vault", font=("Arial", 24, "bold"), bg="#111111", fg="#05cacf")
+        # Title label, centered at the top with border color
+        self.title_label = tk.Label(
+            self.top_frame, 
+            text="Cipher Vault", 
+            font=("Arial", 24, "bold"), 
+            bg="#111111", 
+            fg="#05cacf", 
+            bd=2,  # Border thickness
+            highlightbackground="#05cacf",  # Border color
+            highlightcolor="#05cacf",       # Border color when focused
+            highlightthickness=2            # Border thickness around the label
+        )
         self.title_label.place(relx=0.5, y=20, anchor="center")  # Centered horizontally with relx=0.5
+
 
 
 
