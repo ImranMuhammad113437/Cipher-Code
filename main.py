@@ -379,6 +379,77 @@ class CipherInterface:
             # Display an empty message if no valid cipher is selected
             self.output_textbox.insert(tk.END, " ")  # Handle cases where the selected cipher is not listed
 
+    
+    def decryption_action(self):
+        # Get the selected cipher type from the combobox
+        selected_cipher = self.cipher_combobox.get()
+
+        # Check which cipher is selected and perform its corresponding decryption
+        if selected_cipher == "Caesar Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Caesar cipher decryption function
+            self.decryption_caesar_cipher()
+
+        elif selected_cipher == "Brute Force":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Brute Force decryption function
+            self.decryption_brute_force()
+
+        elif selected_cipher == "Vigenère Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Vigenère cipher decryption function
+            self.decryption_vigenere_cipher()
+
+        elif selected_cipher == "One-Time Pad":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the One-Time Pad decryption function
+            self.decryption_one_time_pad()
+
+        elif selected_cipher == "Playfair Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Playfair cipher decryption function
+            self.decryption_playfair_cipher()
+
+        elif selected_cipher == "Monoalphabetic Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Monoalphabetic cipher decryption function
+            self.decryption_monoalphabetic_cipher()
+
+        elif selected_cipher == "Reil Fence Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Rail Fence cipher decryption function
+            self.decryption_reil_cipher()
+
+        elif selected_cipher == "Transposition Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Perform an additional check for numerical input validity
+            if self.numerical_check():  # If the numerical input is valid
+                # Call the Transposition cipher decryption function
+                self.decryption_transposition()
+            else:
+                # Display an error message if the numerical input is invalid
+                self.output_textbox.insert(1.0, "Error: Invalid input in numerical fields.")
+
+        elif selected_cipher == "Affine Cipher":
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Affine cipher decryption function
+            self.decryption_affine_cipher()
+
+        else:
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Insert an empty message if no valid cipher is selected
+            self.output_textbox.insert(tk.END, " ")  # Handle cases where the selected cipher is not listed
+
          
 
 
@@ -434,51 +505,7 @@ class CipherInterface:
 
 
     
-    def decryption_action(self):
-        selected_cipher = self.cipher_combobox.get()
 
-        if selected_cipher == "Caesar Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.decryption_caesar_cipher()  
-
-        elif selected_cipher == "Brute Force":
-            self.output_textbox.delete(1.0, tk.END)
-            self.decryption_brute_force()
-            
-        elif selected_cipher == "Vigenère Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.decryption_vigenere_cipher()
-
-        elif selected_cipher == "One-Time Pad":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.decryption_one_time_pad()  
-
-        elif selected_cipher == "Playfair Cipher":
-            self.output_textbox.delete(1.0, tk.END) 
-            self.decryption_playfair_cipher()
-
-        elif selected_cipher == "Monoalphabetic Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.decryption_monoalphabetic_cipher()
-
-        elif selected_cipher == "Reil Fence Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.decryption_reil_cipher()
-
-        elif selected_cipher == "Transposition Cipher":
-            self.output_textbox.delete(1.0, tk.END)
-            if self.numerical_check():  # Check if the numerical_check passes
-                self.decryption_transposition()  # Call the encryption function
-            else:
-                self.output_textbox.insert(1.0, "Error: Invalid input in numerical fields.")
-            
-        elif selected_cipher == "Affine Cipher":
-            self.output_textbox.delete(1.0, tk.END)
-            self.decryption_affine_cipher()
-
-        else:
-            self.output_textbox.delete(1.0, tk.END)
-            self.output_textbox.insert(tk.END, " ")  # In case the selected cipher is not listed
     
 
         
