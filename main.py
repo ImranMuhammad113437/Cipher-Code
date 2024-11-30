@@ -276,67 +276,112 @@ class CipherInterface:
         self.reset_button = tk.Button(self.cipher_frame, text="Reset Cipher",bg="#05cacf",fg="#111111",font=("Comic Sans MS", 12), command=self.reset_cipher, state="disabled")
         self.reset_button.grid(row=3, column=13, columnspan=13, pady=10)  # Span the button across the other half of the columns
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
-        
-        #-----------------------------------------------------------------------------------------------------------------------    
-        #-----------------------------------------------------------------------------------------------------------------------    
-        #-----------------------------------------------------------------------------------------------------------------------    
 
-    #-----------------------------------------------------------------------------------------------------------------------
-    #Main Function
-    #-----------------------------------------------------------------------------------------------------------------------    
-    # Function to handle encryption action
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Main Function-------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+    
     def encryption_action(self):
-        
+        # Get the selected cipher type from the combobox
         selected_cipher = self.cipher_combobox.get()
-
         
+        # Check which cipher is selected and perform its encryption
         if selected_cipher == "Caesar Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
-            self.encryption_caesar_cipher()  
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Caesar cipher encryption function
+            self.encryption_caesar_cipher()
 
         elif selected_cipher == "Vigenère Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Vigenère cipher encryption function
             self.encryption_vigenere_cipher()
 
         elif selected_cipher == "One-Time Pad":
-            self.output_textbox.delete(1.0, tk.END) 
-            self.encryption_one_time_pad() 
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the One-Time Pad encryption function
+            self.encryption_one_time_pad()
 
         elif selected_cipher == "Playfair Cipher":
-            self.output_textbox.delete(1.0, tk.END) 
-            self.encryption_playfair_cipher()  
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Playfair cipher encryption function
+            self.encryption_playfair_cipher()
 
         elif selected_cipher == "Monoalphabetic Cipher":
-            self.output_textbox.delete(1.0, tk.END)  
+            # Clear the output textbox
+            self.output_textbox.delete(1.0, tk.END)
+            # Call the Monoalphabetic cipher encryption function
             self.encryption_monoalphabetic_cipher()
 
         elif selected_cipher == "Brute Force":
+            # Clear the output textbox
             self.output_textbox.delete(1.0, tk.END)
+            # Call the Brute Force encryption function
             self.encryption_brute_force()
 
         elif selected_cipher == "Reil Fence Cipher":
+            # Clear the output textbox
             self.output_textbox.delete(1.0, tk.END)
+            # Call the Rail Fence cipher encryption function
             self.encryption_reil_cipher()
 
         elif selected_cipher == "Transposition Cipher":
+            # Clear the output textbox
             self.output_textbox.delete(1.0, tk.END)
-            if self.numerical_check():  # Check if the numerical_check passes
-                self.encryption_transposition()  # Call the encryption function
+            # Perform an additional check for numerical input validity
+            if self.numerical_check():  # Check if the numerical input is valid
+                # Call the Transposition cipher encryption function
+                self.encryption_transposition()
             else:
+                # Display an error message if the numerical input is invalid
                 self.output_textbox.insert(1.0, "Error: Invalid input in numerical fields.")
-        
+
         elif selected_cipher == "Affine Cipher":
+            # Clear the output textbox
             self.output_textbox.delete(1.0, tk.END)
+            # Call the Affine cipher encryption function
             self.encryption_affine_cipher()
 
-
         else:
+            # Clear the output textbox
             self.output_textbox.delete(1.0, tk.END)
-            self.output_textbox.insert(tk.END, " ")  # In case the selected cipher is not listed
+            # Display an empty message if no valid cipher is selected
+            self.output_textbox.insert(tk.END, " ")  # Handle cases where the selected cipher is not listed
+
          
 
-    # Function to handle encryption action
+
     def numerical_check(self):
         """
         Validates the input in self.colseq_entry.
@@ -414,7 +459,7 @@ class CipherInterface:
 
         elif selected_cipher == "Monoalphabetic Cipher":
             self.output_textbox.delete(1.0, tk.END)  
-            self.output_textbox.insert(tk.END, "It is Monoalphabetic Cipher")
+            self.decryption_monoalphabetic_cipher()
 
         elif selected_cipher == "Reil Fence Cipher":
             self.output_textbox.delete(1.0, tk.END)  
@@ -595,9 +640,106 @@ class CipherInterface:
             field.delete(0, "end")  # Clear any existing value
             field.config(state="readonly")  # Set the field back to readonly
 
-    #-----------------------------------------------------------------------------------------------------------------------
-    #Cipher Function
-    #-----------------------------------------------------------------------------------------------------------------------    
+    def generate_key_square(self, keyword):
+        # Remove duplicates and add the rest of the alphabet
+        keyword = keyword.upper().replace("J", "I")
+        key_square = []
+        used = set()
+
+        for char in keyword:
+            if char not in used and char.isalpha():
+                key_square.append(char)
+                used.add(char)
+
+        for char in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
+            if char not in used:
+                key_square.append(char)
+
+        return [key_square[i:i + 5] for i in range(0, 25, 5)]
+
+    def find_position(self, key_square, char):
+        for row_idx, row in enumerate(key_square):
+            if char in row:
+                return row_idx, row.index(char)
+        return None
+
+    def prepare_text(self, text, filler="X"):
+        text = text.upper().replace("J", "I")
+        prepared = ""
+
+        i = 0
+        while i < len(text):
+            if text[i].isalpha():
+                if i + 1 < len(text) and text[i] == text[i + 1]:  # Check for duplicate consecutive letters
+                    prepared += text[i] + filler
+                else:
+                    prepared += text[i]
+            i += 1
+
+        if len(prepared) % 2 != 0:  # Ensure length is even
+            prepared += filler
+
+        return prepared
+    
+    def generate_key(self,text, key):
+        """
+        Expands the key to match the length of the text.
+        """
+        key = key.upper()  # Normalize key to uppercase
+        key = (key * (len(text) // len(key))) + key[:len(text) % len(key)]
+        return key
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Cipher Function-----------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+    
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Affine Cipher-------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
     def decryption_affine_cipher(self):
         ciphertext = self.input_textbox.get("1.0", "end-1c")
         key_a = int(self.key_a_combobox.get())
@@ -665,7 +807,17 @@ class CipherInterface:
         self.output_textbox.delete("1.0", "end")
         self.output_textbox.insert("1.0", ciphertext)
 
-    
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Transposition Cipher------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
     def decryption_transposition(self):
         ciphertext = self.input_textbox.get("1.0", "end").strip()  # Retrieve ciphertext
         num_columns = int(self.key_entry.get().strip())  # Number of columns
@@ -744,8 +896,17 @@ class CipherInterface:
         self.output_textbox.delete("1.0", "end")
         self.output_textbox.insert("1.0", transposed_text)
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
-    
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Reil Fence Cipher---------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+  
     def decryption_reil_cipher(self):
         # Retrieve input text and number of rows
         cipher_text = self.input_textbox.get("1.0", "end").strip()  # Get encrypted text from the textbox
@@ -833,7 +994,16 @@ class CipherInterface:
         self.output_textbox.delete("1.0", "end")
         self.output_textbox.insert("1.0", cipher_text)
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Brute Force Cipher--------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
     
     def decryption_brute_force(self):
         encrypted_text = self.input_textbox.get("1.0", tk.END).strip()
@@ -889,11 +1059,16 @@ class CipherInterface:
         self.output_textbox.insert(tk.END, "Brute Force Encryptions:\n")
         self.output_textbox.insert(tk.END, "".join(possible_encryptions))
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 
-
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Monoalphabetic Cipher-----------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
     def encryption_monoalphabetic_cipher(self):
         # Get the input text (plain text) from the input_textbox
@@ -946,99 +1121,120 @@ class CipherInterface:
         self.output_textbox.delete("1.0", "end")
         self.output_textbox.insert("1.0", decrypted_text)
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
     
-    def generate_key_square(self, keyword):
-        # Remove duplicates and add the rest of the alphabet
-        keyword = keyword.upper().replace("J", "I")
-        key_square = []
-        used = set()
-
-        for char in keyword:
-            if char not in used and char.isalpha():
-                key_square.append(char)
-                used.add(char)
-
-        for char in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
-            if char not in used:
-                key_square.append(char)
-
-        return [key_square[i:i + 5] for i in range(0, 25, 5)]
-
-    def find_position(self, key_square, char):
-        for row_idx, row in enumerate(key_square):
-            if char in row:
-                return row_idx, row.index(char)
-        return None
-
-    def prepare_text(self, text, filler="X"):
-        text = text.upper().replace("J", "I")
-        prepared = ""
-
-        i = 0
-        while i < len(text):
-            if text[i].isalpha():
-                if i + 1 < len(text) and text[i] == text[i + 1]:  # Check for duplicate consecutive letters
-                    prepared += text[i] + filler
-                else:
-                    prepared += text[i]
-            i += 1
-
-        if len(prepared) % 2 != 0:  # Ensure length is even
-            prepared += filler
-
-        return prepared
+    
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------PlayFair Cipher-----------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
     def encryption_playfair_cipher(self):
+        # Get the plaintext input from the input textbox, removing leading/trailing whitespace
         plaintext = self.input_textbox.get("1.0", "end").strip()
+
+        # Get the keyword from the keyword entry field, removing leading/trailing whitespace
         key = self.keyword_entry.get().strip()
 
+        # Generate a 5x5 key square using the given key
         key_square = self.generate_key_square(key)
+
+        # Prepare the plaintext for encryption (e.g., making it suitable for Playfair cipher rules)
         plaintext = self.prepare_text(plaintext)
 
+        # Initialize an empty string to store the resulting ciphertext
         ciphertext = ""
+
+        # Iterate over the plaintext in pairs of two characters
         for i in range(0, len(plaintext), 2):
+            # Extract the current pair of characters
             a, b = plaintext[i], plaintext[i + 1]
+
+            # Find the row and column of the first character in the key square
             row_a, col_a = self.find_position(key_square, a)
+
+            # Find the row and column of the second character in the key square
             row_b, col_b = self.find_position(key_square, b)
 
+            # If the characters are in the same row, replace each with the character to its right
             if row_a == row_b:  # Same row
-                ciphertext += key_square[row_a][(col_a + 1) % 5]
+                ciphertext += key_square[row_a][(col_a + 1) % 5]  # Wrap around to the beginning if at the end
                 ciphertext += key_square[row_b][(col_b + 1) % 5]
+
+            # If the characters are in the same column, replace each with the character below it
             elif col_a == col_b:  # Same column
-                ciphertext += key_square[(row_a + 1) % 5][col_a]
+                ciphertext += key_square[(row_a + 1) % 5][col_a]  # Wrap around to the top if at the bottom
                 ciphertext += key_square[(row_b + 1) % 5][col_b]
+
+            # If the characters form a rectangle, replace each with the character in the same row but opposite corner
             else:  # Rectangle
                 ciphertext += key_square[row_a][col_b]
                 ciphertext += key_square[row_b][col_a]
 
+        # Clear the output textbox before displaying the result
         self.output_textbox.delete("1.0", "end")
+
+        # Insert the ciphertext into the output textbox
         self.output_textbox.insert("1.0", ciphertext)
 
     def decryption_playfair_cipher(self):
+        # Get the ciphertext input from the input textbox, removing leading/trailing whitespace
         ciphertext = self.input_textbox.get("1.0", "end").strip()
+
+        # Get the keyword from the keyword entry field, removing leading/trailing whitespace
         key = self.keyword_entry.get().strip()
 
+        # Generate a 5x5 key square using the given key
         key_square = self.generate_key_square(key)
 
+        # Initialize an empty string to store the resulting plaintext
         plaintext = ""
+
+        # Iterate over the ciphertext in pairs of two characters
         for i in range(0, len(ciphertext), 2):
+            # Extract the current pair of characters
             a, b = ciphertext[i], ciphertext[i + 1]
+
+            # Find the row and column of the first character in the key square
             row_a, col_a = self.find_position(key_square, a)
+
+            # Find the row and column of the second character in the key square
             row_b, col_b = self.find_position(key_square, b)
 
+            # If the characters are in the same row, replace each with the character to its left
             if row_a == row_b:  # Same row
-                plaintext += key_square[row_a][(col_a - 1) % 5]
+                plaintext += key_square[row_a][(col_a - 1) % 5]  # Wrap around to the end if at the start
                 plaintext += key_square[row_b][(col_b - 1) % 5]
+
+            # If the characters are in the same column, replace each with the character above it
             elif col_a == col_b:  # Same column
-                plaintext += key_square[(row_a - 1) % 5][col_a]
+                plaintext += key_square[(row_a - 1) % 5][col_a]  # Wrap around to the bottom if at the top
                 plaintext += key_square[(row_b - 1) % 5][col_b]
+
+            # If the characters form a rectangle, replace each with the character in the same row but opposite corner
             else:  # Rectangle
                 plaintext += key_square[row_a][col_b]
                 plaintext += key_square[row_b][col_a]
 
+        # Clear the output textbox before displaying the result
         self.output_textbox.delete("1.0", "end")
+
+        # Insert the plaintext into the output textbox
         self.output_textbox.insert("1.0", plaintext)
-    
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------One Time Pad Cipher-------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
     
     def encryption_one_time_pad(self):
         # Retrieve plaintext and key from the input fields
@@ -1108,7 +1304,16 @@ class CipherInterface:
         self.output_textbox.delete("1.0", "end")  # Clear the output box
         self.output_textbox.insert("1.0", decrypted_text)
 
-    
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Vigenere Cipher-----------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
     def encryption_vigenere_cipher(self):
         plaintext = self.input_textbox.get("1.0", tk.END).strip()
         key = self.keyword_entry.get().strip()
@@ -1160,14 +1365,15 @@ class CipherInterface:
         self.output_textbox.delete("1.0", tk.END)  # Clear any existing text
         self.output_textbox.insert("1.0", decrypted_text)
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
 
-    def generate_key(self,text, key):
-        """
-        Expands the key to match the length of the text.
-        """
-        key = key.upper()  # Normalize key to uppercase
-        key = (key * (len(text) // len(key))) + key[:len(text) % len(key)]
-        return key
+
+    
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Caesar Cipher-------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
     
     def encryption_caesar_cipher(self):
         # Get the plain text input from the input_textbox
@@ -1232,8 +1438,18 @@ class CipherInterface:
 
         # Display the decrypted text in output_textbox
         self.output_textbox.delete(1.0, "end")  # Clear previous output
-        self.output_textbox.insert("end", decrypted_text)    
-#---------------------------------------Hashing----------------------------------------------------------------------------
+        self.output_textbox.insert("end", decrypted_text)
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------Hashing (SHA256 / MD5)----------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+
     def hashing_SHA_256(self):
         # Retrieve input text
         plain_text = self.input_textbox.get("1.0", tk.END)
@@ -1259,7 +1475,9 @@ class CipherInterface:
         self.output_textbox.delete(1.0, "end")  # Clear any existing text
         self.output_textbox.insert("end", md5_hash)  # Insert the hash value
 
-#-----------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------
         
 
 
